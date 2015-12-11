@@ -78,7 +78,7 @@ module.exports = function(opt, execFile_opt) {
   function endStream() {
     if (!files.length) return this.emit('end');
     var firstFile = files[0];
-    var args;
+    var flagFile;
     var args = [];
     var compilerPath = opt.compilerPath || CC.jar_path;
 
@@ -92,7 +92,8 @@ module.exports = function(opt, execFile_opt) {
     }
 
   	// To prevent maximum length of command line string exceeded error.
-    args.push('--flagfile="' + getFlagFilePath(files) + '"');
+    flagFile = getFlagFilePath(files);
+    args.push('--flagfile="' + flagFile + '"');
 
     args = args.concat(flagsToArgs(opt.compilerFlags));
 
@@ -110,6 +111,8 @@ module.exports = function(opt, execFile_opt) {
     // Enable custom max buffer to fix "stderr maxBuffer exceeded" error. Default is 1000*1024.
     var executable = compilerPath ? 'java' : 'closure-compiler';
     var jar = execFile(executable, args, { maxBuffer: opt.maxBuffer*1024 }, function(error, stdout, stderr) {
+    	fs.unlinkSync(flagFile);
+
       if (error || (stderr && !opt.continueWithWarnings)) {
         this.emit('error', new gutil.PluginError(PLUGIN_NAME, error || stderr));
         return;
