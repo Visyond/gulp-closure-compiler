@@ -79,6 +79,7 @@ module.exports = function(opt, execFile_opt) {
     if (!files.length) return this.emit('end');
     var firstFile = files[0];
     var args;
+    var args = [];
     var compilerPath = opt.compilerPath || CC.jar_path;
 
     if (compilerPath) {
@@ -86,16 +87,13 @@ module.exports = function(opt, execFile_opt) {
         '-jar',
         // For faster compilation. It's supported everywhere from Java 1.7+.
         opt.tieredCompilation ? '-XX:+TieredCompilation' : '-XX:-TieredCompilation',
-        compilerPath,
-        // To prevent maximum length of command line string exceeded error.
-        '--flagfile="' + getFlagFilePath(files) + '"'
-      ];
-    } else {
-      args = [
-        // To prevent maximum length of command line string exceeded error.
-        '--flagfile="' + getFlagFilePath(files) + '"'
+        compilerPath
       ];
     }
+
+  	// To prevent maximum length of command line string exceeded error.
+    args.push('--flagfile="' + getFlagFilePath(files) + '"');
+
     args = args.concat(flagsToArgs(opt.compilerFlags));
 
     var javaFlags = opt.javaFlags || [];
