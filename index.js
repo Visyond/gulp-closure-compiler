@@ -78,7 +78,6 @@ module.exports = function(opt, execFile_opt) {
   function endStream() {
     if (!files.length) return this.emit('end');
     var firstFile = files[0];
-    var outputFilePath = tempWrite.sync('');
     var args;
     var compilerPath = opt.compilerPath || CC.jar_path;
 
