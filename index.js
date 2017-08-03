@@ -110,6 +110,7 @@ module.exports = function(opt, execFile_opt) {
 
     // Enable custom max buffer to fix "stderr maxBuffer exceeded" error. Default is 1000*1024.
     var executable = compilerPath ? 'java' : 'closure-compiler';
+    args.unshift("-Xmx1024m");
     var jar = execFile(executable, args, { maxBuffer: opt.maxBuffer*1024 }, function(error, stdout, stderr) {
     	fs.unlinkSync(flagFile);
 
